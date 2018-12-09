@@ -1,1 +1,6 @@
 # NominatimLibrary
+
+## Requirements
+
+- geopy
+- 
