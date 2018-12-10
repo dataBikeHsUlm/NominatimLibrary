@@ -1,12 +1,23 @@
+import ssl
+
+import geopy
 from geopy.geocoders import Nominatim
 from geopy import distance
 
 from pyroutelib2.loadOsm import LoadOsm
 from pyroutelib2.route import Router
 
+DOMAIN = "i-nominatim-01.informatik.hs-ulm.de/nominatim/"
+
+# Timeout for the nominatim server requests
+## Some search requests can take some time when executed for the first time
+TIMEOUT = 100000
+
 class Locator:
-    def __init__(self):
-        self.geolocator = Nominatim(user_agent="Test")
+    def __init__(self, domain = DOMAIN):
+        geopy.geocoders.options.default_scheme = "http"
+
+        self.geolocator = Nominatim(user_agent="Test", timeout=TIMEOUT, domain=DOMAIN)
 
     def locate(self, address):
         """Gets the coordinates to a given address
