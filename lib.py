@@ -100,6 +100,8 @@ class Locator:
             Returns:
                 float : distance in km
         """
+
+        # Connect pyroutelib to our server
         data = LoadOsm("cycle")
         router = Router(data)
 
