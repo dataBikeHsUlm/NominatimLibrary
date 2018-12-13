@@ -17,7 +17,7 @@ class Locator:
     def __init__(self, domain = DOMAIN):
         geopy.geocoders.options.default_scheme = "http"
 
-        self.geolocator = Nominatim(user_agent="Test", timeout=TIMEOUT, domain=DOMAIN)
+        self.geolocator = Nominatim(user_agent="Test", timeout=TIMEOUT, domain=domain)
 
     def locate(self, address):
         """Gets the coordinates to a given address
