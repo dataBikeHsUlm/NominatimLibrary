@@ -13,6 +13,9 @@ DOMAIN = "i-nominatim-01.informatik.hs-ulm.de/nominatim/"
 ## Some search requests can take some time when executed for the first time
 TIMEOUT = 100000
 
+class NotFoundException(Exception):
+    pass
+
 class Locator:
     def __init__(self, domain = DOMAIN):
         geopy.geocoders.options.default_scheme = "http"
@@ -40,6 +43,8 @@ class Locator:
                 (latitude (float), longitude (float) )
         """
         loc = self.locate(address)
+        if loc == None:
+            raise new NotFoundException(address)
         return (loc.latitude, loc.longitude)
 
     def reverse_locate(self, coordinates):
