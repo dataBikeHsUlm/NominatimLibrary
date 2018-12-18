@@ -27,7 +27,7 @@ try:  # Python 3.x
 except ImportError:  # Python 2.x
   from urllib import urlretrieve
 
-from tilenames import tileEdges
+from pyroutelib2.tilenames import tileEdges
 
 def DownloadLevel():
   """All primary downloads are done at a particular zoom level"""

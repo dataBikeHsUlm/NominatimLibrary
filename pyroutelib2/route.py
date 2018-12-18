@@ -27,7 +27,7 @@
 #------------------------------------------------------
 import sys
 import math 
-from loadOsm import LoadOsm
+from pyroutelib2.loadOsm import LoadOsm
 
 class Router(object):
   def __init__(self, data):
