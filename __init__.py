@@ -44,7 +44,7 @@ class Locator:
         """
         loc = self.locate(address)
         if loc == None:
-            raise new NotFoundException(address)
+            raise NotFoundException(address)
         return (loc.latitude, loc.longitude)
 
     def reverse_locate(self, coordinates):
