@@ -4,8 +4,8 @@ import geopy
 from geopy.geocoders import Nominatim
 from geopy import distance
 
-from pyroutelib2.loadOsm import LoadOsm
-from pyroutelib2.route import Router
+from .pyroutelib2.loadOsm import LoadOsm
+from .pyroutelib2.route import Router
 
 DOMAIN = "i-nominatim-01.informatik.hs-ulm.de/nominatim/"
 
