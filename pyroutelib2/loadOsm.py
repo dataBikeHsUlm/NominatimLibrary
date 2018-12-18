@@ -30,9 +30,9 @@ import xml.etree.ElementTree as etree
 from datetime import datetime
 
 # from pyroutelib2 import (tiledata, tilenames, weights)
-import tiledata
-import tilenames
-import weights
+import .tiledata
+import .tilenames
+import .weights
 
 class LoadOsm(object):
   """Parse an OSM file looking for routing information, and do routing with it"""
