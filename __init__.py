@@ -20,7 +20,22 @@ class NotFoundException(Exception):
 def format_points_graphhopper(point):
     return "&point=" + str(point[0]) + "," + str(point[1])
 
-def get_routes(coord0, coord1, calc_points=False):
+def get_route(coord0, coord1, calc_points=False):
+    """
+    Gets the coordinates to a given address
+
+        Args:
+            address (str) : String List of following arguments: house_number,road, town, city, county, state_district, state, postcode, country, country_code
+
+        Returns:
+            Dictionnary containing the shortest path information :
+            path = {
+                    "distance": distance in meters
+                    "time": time in milisecond
+                    "bbox": coordinates of the rectangle containing the path : [minLon, minLat, maxLon, maxLat]
+                    "points": array of coordinates arrays : [[lon,lat]]
+            }
+    """
     # See https://graphhopper.com/api/1/docs/routing/
 
     calc_points_str = "&calc_points=" + str(calc_points)
@@ -29,8 +44,16 @@ def get_routes(coord0, coord1, calc_points=False):
 
     answer = urllib.request.urlopen(query).read()
     parsed_json = json.loads(answer)
+    first_path = parsed_json["paths"][0]
 
-    return parsed_json
+    path = {
+            "distance": first_path["distance"],
+            "time": first_path["time"],
+            "bbox": first_path["bbox"],
+            "points": first_path["points"]["coordinates"]
+    }
+
+    return path
 
 class Locator:
     def __init__(self, domain = DOMAIN):
@@ -122,9 +145,9 @@ class Locator:
                 float : distance in km
         """
 
-        route = get_routes(coord0, coord1, False)
+        route = get_route(coord0, coord1, False)
 
-        return route["paths"][0]["distance"] / 1000
+        return ["distance"] / 1000
 
 if __name__ == "__main__":
     ltr = Locator()
