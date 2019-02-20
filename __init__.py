@@ -24,19 +24,17 @@ def get_route(coord0, coord1, calc_points=False):
     """
     Gets the coordinates to a given address
 
-        Args:
-            address (str) : String List of following arguments: house_number,road, town, city, county, state_district, state, postcode, country, country_code
-
-        Returns:
-            Dictionnary containing the shortest path information :
-            path = {
-                    "distance": distance in meters
-                    "time": time in milisecond
-                    "bbox": coordinates of the rectangle containing the path : [minLon, minLat, maxLon, maxLat]
-                    "points": array of coordinates arrays : [[lon,lat]]
-            }
-    """
     # See https://graphhopper.com/api/1/docs/routing/
+
+    Returns:
+        Dictionnary containing the shortest path information :
+        path = {
+                "distance": distance in meters
+                "time": time in milisecond
+                "bbox": coordinates of the rectangle containing the path : [minLon, minLat, maxLon, maxLat]
+                "points": array of coordinates arrays : [[lon,lat]] only if `calc_points` is True
+        }
+    """
 
     calc_points_str = "&calc_points=" + str(calc_points)
     points_str = format_points_graphhopper(coord0) + format_points_graphhopper(coord1)
