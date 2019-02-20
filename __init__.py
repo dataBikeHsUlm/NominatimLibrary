@@ -1,13 +1,14 @@
 import ssl
+import urllib.request
+import json
 
 import geopy
 from geopy.geocoders import Nominatim
 from geopy import distance
 
-from .pyroutelib2.loadOsm import LoadOsm
-from .pyroutelib2.route import Router
-
 DOMAIN = "i-nominatim-01.informatik.hs-ulm.de/nominatim/"
+GRAPHHOPPER_API = "http://i-nominatim-01.informatik.hs-ulm.de:11111"
+GRAPHHOPPER_ROUTE_QUERY = "route?vehicle=bike&instructions=false&points_encoded=false"
 
 # Timeout for the nominatim server requests
 ## Some search requests can take some time when executed for the first time
@@ -15,6 +16,21 @@ TIMEOUT = 100000
 
 class NotFoundException(Exception):
     pass
+
+def format_points_graphhopper(point):
+    return "&point=" + str(point[0]) + "," + str(point[1])
+
+def get_routes(coord0, coord1, calc_points=False):
+    # See https://graphhopper.com/api/1/docs/routing/
+
+    calc_points_str = "&calc_points=" + str(calc_points)
+    points_str = format_points_graphhopper(coord0) + format_points_graphhopper(coord1)
+    query = GRAPHHOPPER_API + "/" + GRAPHHOPPER_ROUTE_QUERY + calc_points_str + points_str
+
+    answer = urllib.request.urlopen(query).read()
+    parsed_json = json.loads(answer)
+
+    return parsed_json
 
 class Locator:
     def __init__(self, domain = DOMAIN):
@@ -106,34 +122,9 @@ class Locator:
                 float : distance in km
         """
 
-        # Connect pyroutelib to our server
-        data = LoadOsm("cycle")
-        router = Router(data)
+        route = get_routes(coord0, coord1, False)
 
-        node0 = data.findNode(coord0[0], coord0[1])
-        node1 = data.findNode(coord1[0], coord1[1])
-
-        result, route = router.doRoute(node0, node1)
-
-        if result == 'success':
-            lats = []
-            lons = []
-            for i in route:
-                node = data.rnodes[i]
-                lats.append(node[0])
-                lons.append(node[1])
-                # print("%d: %f,%f" % (i, node[0], node[1]))
-
-            distance_route = 0
-            for i in range(len(lons)-1):
-                p1=(lats[i],lons[i])
-                p2=(lats[i+1],lons[i+1])
-                distance_route += self.distance_crow_coords(p1, p2)
-
-            return distance_route
-        else:
-            print("Error calculating the route.")
-
+        return route["paths"][0]["distance"] / 1000
 
 if __name__ == "__main__":
     ltr = Locator()
@@ -142,6 +133,10 @@ if __name__ == "__main__":
     hsulm2 = "Albert Einstein Allee, Ulm"
 
     loc = ltr.locate(hsulm)
+    print(loc.address)
+    print(loc.latitude, loc.longitude)
+
+    loc = ltr.locate(hsulm2)
     print(loc.address)
     print(loc.latitude, loc.longitude)
 
