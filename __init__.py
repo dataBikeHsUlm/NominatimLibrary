@@ -6,9 +6,10 @@ import geopy
 from geopy.geocoders import Nominatim
 from geopy import distance
 
+TRANSPORT="car"
 DOMAIN = "i-nominatim-01.informatik.hs-ulm.de/nominatim/"
 GRAPHHOPPER_API = "http://i-nominatim-01.informatik.hs-ulm.de:11111"
-GRAPHHOPPER_ROUTE_QUERY = "route?vehicle=bike&instructions=false&points_encoded=false"
+GRAPHHOPPER_ROUTE_QUERY = "route?vehicle=" + TRANSPORT + "&instructions=false&points_encoded=false"
 
 # Timeout for the nominatim server requests
 ## Some search requests can take some time when executed for the first time
@@ -136,7 +137,7 @@ class Locator:
                 "distance": first_path["distance"],
                 "time": first_path["time"],
         }
-        
+
         if calc_points:
             path["bbox"] = first_path["bbox"]
             path["points"] = first_path["points"]["coordinates"]
