@@ -11,6 +11,9 @@ DOMAIN = "i-nominatim-01.informatik.hs-ulm.de/nominatim/"
 GRAPHHOPPER_API = "http://i-nominatim-01.informatik.hs-ulm.de:11111"
 GRAPHHOPPER_ROUTE_QUERY = "route?vehicle=" + TRANSPORT + "&instructions=false&points_encoded=false"
 
+GRAPHHOPPER_WORKING_POINT_LAT=42.5
+GRAPHHOPPER_WORKING_POINT_LON=1.5
+
 # Timeout for the nominatim server requests
 ## Some search requests can take some time when executed for the first time
 TIMEOUT = 100000
@@ -166,6 +169,23 @@ class Locator:
         """
 
         return self.path_route_coords(coord0, coord1, False)["distance"] / 1000
+
+    def try_point_graphhopper(self, coord):
+        """Tests the given coordinate with Graphhopper route API to see if it can be used.
+
+            Args:
+                coord ( (latitude (float), longitude (float)) ) : coordinates
+
+            Returns:
+                bool: True if it is working, False otherwise
+        """
+        working_point = (GRAPHHOPPER_WORKING_POINT_LAT, GRAPHHOPPER_WORKING_POINT_LON)
+
+        try:
+            self.distance_route_coords(working_point, coord)
+            return True
+        except Exception as e:
+            return False
 
 if __name__ == "__main__":
     ltr = Locator()
