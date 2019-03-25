@@ -170,7 +170,7 @@ class Locator:
 
         return self.path_route_coords(coord0, coord1, False)["distance"] / 1000
 
-    def try_point_graphhopper(self, coord):
+    def is_usable_point_graphhopper(self, coord):
         """Tests the given coordinate with Graphhopper route API to see if it can be used.
 
             Args:
