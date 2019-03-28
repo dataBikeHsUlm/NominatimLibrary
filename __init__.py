@@ -8,6 +8,7 @@ from geopy import distance
 
 TRANSPORT="car"
 DOMAIN = "i-nominatim-01.informatik.hs-ulm.de/nominatim/"
+DOMAIN_FALLBACK = "nominatim.openstreetmap.org/"
 GRAPHHOPPER_API = "http://i-nominatim-01.informatik.hs-ulm.de:11111"
 GRAPHHOPPER_ROUTE_QUERY = "route?vehicle=" + TRANSPORT + "&instructions=false&points_encoded=false"
 
@@ -29,6 +30,7 @@ class Locator:
         geopy.geocoders.options.default_scheme = "http"
 
         self.geolocator = Nominatim(user_agent="Test", timeout=TIMEOUT, domain=domain)
+        self.fallback = Locator.__init__(DOMAIN_FALLBACK)
 
     def locate(self, address):
         """Gets the coordinates to a given address
@@ -52,7 +54,9 @@ class Locator:
         """
         loc = self.locate(address)
         if loc == None:
-            raise NotFoundException(address)
+            loc = self.fallback.locate(address)
+            if loc == None:
+                raise NotFoundException(address)
         return (loc.latitude, loc.longitude)
 
     def reverse_locate(self, coordinates):
