@@ -31,6 +31,7 @@ class Locator:
 
         self.geolocator = Nominatim(user_agent="Test", timeout=TIMEOUT, domain=domain)
 
+        self.fallback = None
         if domain != DOMAIN_FALLBACK:
             self.fallback = Locator(DOMAIN_FALLBACK)
 
