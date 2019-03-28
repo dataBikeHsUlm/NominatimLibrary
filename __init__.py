@@ -30,7 +30,9 @@ class Locator:
         geopy.geocoders.options.default_scheme = "http"
 
         self.geolocator = Nominatim(user_agent="Test", timeout=TIMEOUT, domain=domain)
-        self.fallback = Locator.__init__(DOMAIN_FALLBACK)
+
+        if domain != DOMAIN_FALLBACK:
+            self.fallback = Locator(DOMAIN_FALLBACK)
 
     def locate(self, address):
         """Gets the coordinates to a given address
@@ -54,7 +56,8 @@ class Locator:
         """
         loc = self.locate(address)
         if loc == None:
-            loc = self.fallback.locate(address)
+            if self.fallback != None:
+                loc = self.fallback.locate(address)
             if loc == None:
                 raise NotFoundException(address)
         return (loc.latitude, loc.longitude)
