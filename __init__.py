@@ -26,13 +26,13 @@ def format_points_graphhopper(point):
     return "&point=" + str(point[0]) + "," + str(point[1])
 
 class Locator:
-    def __init__(self, domain = DOMAIN):
+    def __init__(self, domain = DOMAIN, use_fallback=True):
         geopy.geocoders.options.default_scheme = "http"
 
         self.geolocator = Nominatim(user_agent="Test", timeout=TIMEOUT, domain=domain)
 
         self.fallback = None
-        if domain != DOMAIN_FALLBACK:
+        if use_fallback and domain != DOMAIN_FALLBACK:
             self.fallback = Locator(DOMAIN_FALLBACK)
 
     def locate(self, address):
